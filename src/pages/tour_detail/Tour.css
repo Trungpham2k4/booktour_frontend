@@ -1,0 +1,115 @@
+/* Reset mặc định */
+input,
+a {
+  all: unset;
+}
+
+/* Container tổng */
+.product-detail-container {
+  margin-top: 100px;
+  width: 100%;
+  color: #000000 !important;
+  background-color: #fffffc;
+}
+
+/* Tiêu đề */
+.product-detail-cap {
+  margin: 50px 0px 20px 40px;
+}
+
+/* Layout hình + thông tin */
+.product-image-container {
+  display: flex;
+  padding: 40px;
+}
+
+.image-container {
+  width: 50%;
+  max-width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.image-detail {
+  width: 80%;
+  max-height: 500px;
+  object-fit: contain;
+  aspect-ratio: 3 / 4;
+}
+
+.name-price-container {
+  width: 50%;
+  padding: 0 20px;
+}
+
+label {
+  display: none;
+}
+
+/* Ô nhập số lượng */
+#num {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #283618;
+  margin-bottom: 10px;
+}
+
+/* Hai nút Đặt tour & Mua ngay */
+.order-purchase-container {
+  display: flex;
+  gap: 10px;
+}
+
+/* Nút chung */
+.order-button-container,
+.purchase-button-container {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+/* Nút Đặt tour (nút xanh biển) */
+.order-button-container {
+  background-color: #007bff;
+}
+
+/* Nút Mua ngay (xanh rêu) */
+.purchase-button-container {
+  background-color: #606c38;
+}
+
+/* Style cho thẻ a bên trong các nút */
+.order-button-container a,
+.purchase-button-container a {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .product-image-container {
+    display: block;
+  }
+
+  .image-container,
+  .name-price-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .image-detail {
+    margin-bottom: 20px;
+  }
+}
