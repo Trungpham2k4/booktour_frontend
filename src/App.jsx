@@ -8,6 +8,7 @@ import Register from "./components/register/Register";
 import Profile from "./components/profile/Profile";
 import SearchPage from "./pages/searchPage/Searchpage";
 import Tour from "./pages/tour_detail/Tour";
+import PaymentPage from "./pages/payment/Payment";
 
 import NavBar from "./components/navbar/NavBar";
 import Footer from "./components/footer/Footer";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/tour_detail/:id" element={<Tour />} />
+        <Route path="/payment/:id" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </Router>

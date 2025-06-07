@@ -208,6 +208,14 @@ function Booking() {
                 >
                   {booking.payment_status}
                 </div>
+                {booking.payment_status === "Chờ xử lý" && (
+                  <button 
+                    onClick={() => navigate(`/payment/${booking.booking_id}`)}
+                    className="payment-button"
+                  >
+                    Thanh toán
+                  </button>
+                )}
               </div>
             ))}
           </div>
