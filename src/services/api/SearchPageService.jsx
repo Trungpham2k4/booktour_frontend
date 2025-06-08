@@ -17,6 +17,14 @@ const SearchpageService = {
       console.log("Error fetching" + e);
     }
   },
+  async getTourTypes() {
+    try {
+      const response = await http.get("api/getTourType");
+      return response;
+    } catch (e) {
+      console.log("Error fetching tour types: " + e);
+    }
+  }
 };
 
 export default SearchpageService;

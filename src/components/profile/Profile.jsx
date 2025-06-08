@@ -14,34 +14,8 @@ const Profile = ({
     email: email || "",
     phoneNumber: phoneNumber || "",
   });
-  const [bookings, setBookings] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [notification, setNotification] = useState(null);
-
-  useEffect(() => {
-    // Load mock booking history
-    const mockBookings = [
-      {
-        id: 1,
-        tourName: "Tour Hạ Long",
-        date: "15/05/2023",
-        status: "Confirmed",
-      },
-      {
-        id: 2,
-        tourName: "Tour Đà Nẵng",
-        date: "22/06/2023",
-        status: "Completed",
-      },
-      {
-        id: 3,
-        tourName: "Tour Phú Quốc",
-        date: "10/08/2023",
-        status: "Cancelled",
-      },
-    ];
-    setBookings(mockBookings);
-  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

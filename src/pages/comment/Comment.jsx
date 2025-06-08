@@ -30,7 +30,10 @@ function MainContent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newComment.trim() === "" || rating === 0) return;
+    if (newComment.trim() === "" || rating === 0) {
+      alert("Vui lòng nhập bình luận và đánh giá trước khi gửi.");
+      return;
+    }
 
     await commentService.addComment(newComment, rating);
     const comment = await commentService.getComment();

@@ -1,9 +1,6 @@
 import "./Tour.css";
 import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
-import NavBar from "../../components/navbar/NavBar";
-import Footer from "../../components/footer/Footer";
-import heritageData from "../../data/heritageData";
 import { useState, useEffect } from "react";
 import tourDetailService from "../../services/api/TourDetailPageService";
 

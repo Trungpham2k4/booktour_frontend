@@ -1,6 +1,6 @@
 import "./Searchpage.css";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../../components/navbar/NavBar";
 import Footer from "../../components/footer/Footer";
 import { Link } from "react-router-dom";
@@ -22,6 +22,7 @@ const places = Object.values(heritageData);
 function MainContent() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [tourTypes, setTourTypes] = useState([]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -45,6 +46,19 @@ function MainContent() {
     setSearchResults(filtered);
     setTimeout(() => setIsSearching(false), 500);
   };
+
+  useEffect(() => {
+    const fetchTourTypes = async () => {
+      try {
+        const types = await searchService.getTourTypes();
+        setTourTypes(types);
+      } catch (error) {
+        console.error("Error fetching tour types:", error);
+      }
+    };
+
+    fetchTourTypes();
+  },[]);
 
   return (
     <motion.div
@@ -129,9 +143,11 @@ function MainContent() {
               </label>
               <select id="tourType" className="filter-select">
                 <option value="">Tất cả loại tour</option>
-                <option value="luxury">Cao cấp</option>
-                <option value="standard">Tiêu chuẩn</option>
-                <option value="budget">Tiết kiệm</option>
+                {tourTypes.map((type) => (
+                  <option key={type.tour_type_id} value={type.name}>
+                    {type.name}
+                  </option>
+                ))}
               </select>
             </div>
 
