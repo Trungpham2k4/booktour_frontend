@@ -25,7 +25,7 @@ const Register = ({
     return regex.test(phoneNumber);
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!validateEmail(email)) {
@@ -41,7 +41,7 @@ const Register = ({
     }
 
     // Nếu hợp lệ thì tiếp tục đăng ký
-    authService.signUp(username, password, email, phoneNumber);
+    await authService.signUp(username, password, email, phoneNumber);
     alert("Đăng ký thành công!");
     setShowRegister(false);
   };

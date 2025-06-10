@@ -2,31 +2,38 @@ import "./Comment.css";
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import NavBar from "../../components/navbar/NavBar";
-// import Footer from "../../components/footer/Footer";
 import commentService from "../../services/api/CommentPageService";
+import { FaStar, FaUser, FaPaperPlane } from "react-icons/fa";
+import { format } from 'date-fns';
+
 function MainContent() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const user = localStorage.getItem("user");
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!user) {
       navigate("/");
     }
   }, [user, navigate]);
+
   useEffect(() => {
-    commentService
-      .getComment()
-      .then((data) => {
-        setComments(data); // Sau khi fetch, set state bằng dữ liệu
-      })
-      .catch((err) => {
-        console.error("Lỗi khi fetch comments", err);
-      });
+    fetchComments();
   }, []);
+
+  const fetchComments = async () => {
+    try {
+      const data = await commentService.getComment();
+      setComments(data);
+    } catch (err) {
+      console.error("Lỗi khi tải bình luận", err);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,67 +42,103 @@ function MainContent() {
       return;
     }
 
-    await commentService.addComment(newComment, rating);
-    const comment = await commentService.getComment();
-    setComments(comment);
-    setNewComment("");
-    setRating(0);
+    setIsSubmitting(true);
+    try {
+      await commentService.addComment(newComment, rating);
+      await fetchComments();
+      setNewComment("");
+      setRating(0);
+    } catch (error) {
+      console.error("Lỗi khi gửi bình luận", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="comment-container">
-      <h1>GÓP Ý CỦA BẠN </h1>
+      <div className="comment-header">
+        <h1>Chia Sẻ Đánh Giá Của Bạn</h1>
+        <p className="subtitle">Chúng tôi trân trọng ý kiến đóng góp từ bạn</p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <textarea
-          placeholder="Vui lòng để lại nhận xét của bạn"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          rows="4"
-          cols="50"
-        />
-        <br />
-
-        <div className="star-rating">
-          <label>Đánh giá: </label>
-          {[1, 2, 3, 4, 5].map((num) => (
-            <span
-              key={num}
-              onClick={() => setRating(num)}
-              style={{
-                cursor: "pointer",
-                color: num <= rating ? "gold" : "gray",
-                fontSize: "20px",
-              }}
-            >
-              ★
-            </span>
-          ))}
+      <form onSubmit={handleSubmit} className="comment-form">
+        <div className="form-group">
+          <textarea
+            placeholder="Hãy chia sẻ suy nghĩ của bạn với chúng tôi..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            rows="5"
+            className="comment-textarea"
+          />
         </div>
 
-        <br />
-        <button type="submit">Nhập</button>
+        <div className="form-group">
+          <label className="rating-label">Đánh giá của bạn:</label>
+          <div className="star-rating">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <FaStar
+                key={num}
+                className="star"
+                color={num <= (hoverRating || rating) ? "#FFD700" : "#e4e5e9"}
+                size={28}
+                onClick={() => setRating(num)}
+                onMouseEnter={() => setHoverRating(num)}
+                onMouseLeave={() => setHoverRating(0)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <button type="submit" className="submit-button" disabled={isSubmitting}>
+          {isSubmitting ? (
+            "Đang gửi..."
+          ) : (
+            <>
+              <FaPaperPlane style={{ marginRight: '8px' }} />
+              Gửi Đánh Giá
+            </>
+          )}
+        </button>
       </form>
 
       <div className="comment-list">
-        <h3>Bình luận đã gửi:</h3>
-        {comments.length === 0 && <p>Chưa có bình luận nào.</p>}
-        <ul>
-          {comments.map((cmt, index) => (
-            <li key={index}>
-              <p>{cmt.name}</p>
-              <p>{cmt.comment}</p>
-              <p>
-                Đánh giá:{" "}
-                {[...Array(cmt.rating)].map((_, i) => (
-                  <span key={i} style={{ color: "gold" }}>
-                    ★
-                  </span>
-                ))}
-              </p>
-            </li>
-          ))}
-        </ul>
+        <h3 className="comment-list-title">Đánh Giá Gần Đây</h3>
+        {comments.length === 0 ? (
+          <div className="empty-state">
+            <p>Chưa có bình luận nào. Hãy là người đầu tiên chia sẻ ý kiến!</p>
+          </div>
+        ) : (
+          <ul className="comment-items">
+            {comments.map((cmt, index) => (
+              <li key={index} className="comment-item">
+                <div className="comment-header2">
+                  <div className="user-avatar">
+                    <FaUser />
+                  </div>
+                  <div className="user-info">
+                    <span className="user-name">{cmt.name}</span>
+                    <span className="comment-date">
+                      {format(new Date(cmt.review_date || Date.now()), 'dd/MM/yyyy')}
+                    </span>
+                  </div>
+                </div>
+                <div className="comment-content">
+                  <p>{cmt.comment}</p>
+                </div>
+                <div className="comment-rating">
+                  {[...Array(5)].map((_, i) => (
+                    <FaStar
+                      key={i}
+                      color={i < cmt.rating ? "#FFD700" : "#e4e5e9"}
+                      size={16}
+                    />
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
@@ -107,10 +150,9 @@ function Comment() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      className="page-container"
     >
-      {/* <NavBar /> */}
       <MainContent />
-      {/* <Footer /> */}
     </motion.div>
   );
 }
